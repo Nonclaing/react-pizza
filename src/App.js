@@ -18,9 +18,10 @@ function App() {
           </div>
           <h2 className='content__title'>Все пиццы</h2>
           <div className='content__items'>
-            {pizza.map(({ title, price, imageUrl, sizes, types }) => {
+            {pizza.map(({ id, title, price, imageUrl, sizes, types }) => {
               return (
                 <PizzaBlock
+                  key={id}
                   title={title}
                   price={price}
                   imageUrl={imageUrl}

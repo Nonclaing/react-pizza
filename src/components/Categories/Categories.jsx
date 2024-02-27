@@ -12,7 +12,10 @@ function Categories() {
       <ul>
         {categories.map((text, idx) => {
           return (
-            <li onClick={() => onClickHandler(idx)} className={active === idx ? 'active' : ''}>
+            <li
+              key={idx}
+              onClick={() => onClickHandler(idx)}
+              className={active === idx ? 'active' : ''}>
               {text}
             </li>
           );
