@@ -1,12 +1,5 @@
-import { useState } from 'react';
-
-function Categories() {
-  const [active, setActive] = useState(0);
-
+function Categories({ value, changeCallback }) {
   const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
-
-  const onClickHandler = (idx) => setActive(idx);
-
   return (
     <div className='categories'>
       <ul>
@@ -14,8 +7,8 @@ function Categories() {
           return (
             <li
               key={idx}
-              onClick={() => onClickHandler(idx)}
-              className={active === idx ? 'active' : ''}>
+              onClick={() => changeCallback(idx)}
+              className={value === idx ? 'active' : ''}>
               {text}
             </li>
           );

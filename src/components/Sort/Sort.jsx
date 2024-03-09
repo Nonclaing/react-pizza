@@ -1,7 +1,38 @@
 import { useState } from 'react';
 
-function Sort() {
-  const list = ['популярности', 'цене', 'алфавиту'];
+function Sort({ value, changeCallback }) {
+  const list = [
+    {
+      text: 'популярности (воз.)',
+      sortBy: 'rating',
+      sortOrder: 'ask',
+    },
+    {
+      text: 'популярности (убыв.)',
+      sortBy: 'rating',
+      sortOrder: 'desc',
+    },
+    {
+      text: 'цене  (воз.)',
+      sortBy: 'price',
+      sortOrder: 'ask',
+    },
+    {
+      text: 'цене (убыв.)',
+      sortBy: 'price',
+      sortOrder: 'desc',
+    },
+    {
+      text: 'алфавиту  (воз.)',
+      sortBy: 'title',
+      sortOrder: 'ask',
+    },
+    {
+      text: 'алфавиту (убыв.)',
+      sortBy: 'title',
+      sortOrder: 'desc',
+    },
+  ];
 
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(0);
@@ -9,6 +40,7 @@ function Sort() {
   const popupOnClick = (idx) => {
     setOpen(false);
     setSelected(idx);
+    changeCallback(list[idx]);
   };
 
   return (
@@ -26,12 +58,12 @@ function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{list[selected]}</span>
+        <span onClick={() => setOpen(!open)}>{list[selected].text}</span>
       </div>
       {open && (
         <div className='sort__popup'>
           <ul>
-            {list.map((text, idx) => {
+            {list.map(({ text }, idx) => {
               return (
                 <li
                   key={idx}

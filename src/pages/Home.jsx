@@ -6,22 +6,45 @@ import { useEffect, useState } from 'react';
 
 const Home = () => {
   const [items, setItems] = useState([]);
+  const [categoryId, setCategoryId] = useState(0);
+  const [sortValue, setSortValue] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('https://65de266ddccfcd562f5665ae.mockapi.io/items')
+    setIsLoading(true);
+    const urlParams = [
+      { name: 'category', value: categoryId },
+      { name: 'sortBy', value: sortValue?.sortBy },
+      { name: 'order', value: sortValue?.sortOrder },
+    ];
+
+    console.log(urlParams);
+
+    const urlParamsString = urlParams
+      .map(({ name, value }) => {
+        return value ? `${name}=${value}&` : '';
+      })
+      .join('');
+
+    fetch(`https://65de266ddccfcd562f5665ae.mockapi.io/items?${urlParamsString}`)
       .then((res) => res.json())
       .then((arr) => {
         setItems(arr);
         setIsLoading(false);
       });
-  }, []);
+  }, [categoryId, sortValue]);
 
   return (
     <div className='container'>
       <div className='content__top'>
-        <Categories />
-        <Sort />
+        <Categories value={categoryId} changeCallback={(id) => setCategoryId(id)} />
+        <Sort
+          value={sortValue}
+          changeCallback={(value) => {
+            console.log(value);
+            setSortValue(value);
+          }}
+        />
       </div>
       <h2 className='content__title'>Все пиццы</h2>
       <div className='content__items'>
