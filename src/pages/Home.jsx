@@ -19,31 +19,29 @@ const Home = () => {
   }, []);
 
   return (
-    <Base>
-      <>
-        <div className='content__top'>
-          <Categories />
-          <Sort />
-        </div>
-        <h2 className='content__title'>Все пиццы</h2>
-        <div className='content__items'>
-          {isLoading
-            ? [...new Array(8)].map((_, index) => <Skeleton key={index} />)
-            : items.map(({ id, title, price, imageUrl, sizes, types }) => {
-                return (
-                  <PizzaBlock
-                    key={id}
-                    title={title}
-                    price={price}
-                    imageUrl={imageUrl}
-                    sizes={sizes}
-                    types={types}
-                  />
-                );
-              })}
-        </div>
-      </>
-    </Base>
+    <>
+      <div className='content__top'>
+        <Categories />
+        <Sort />
+      </div>
+      <h2 className='content__title'>Все пиццы</h2>
+      <div className='content__items'>
+        {isLoading
+          ? [...new Array(8)].map((_, index) => <Skeleton key={index} />)
+          : items.map(({ id, title, price, imageUrl, sizes, types }) => {
+              return (
+                <PizzaBlock
+                  key={id}
+                  title={title}
+                  price={price}
+                  imageUrl={imageUrl}
+                  sizes={sizes}
+                  types={types}
+                />
+              );
+            })}
+      </div>
+    </>
   );
 };
 

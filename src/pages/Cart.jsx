@@ -1,7 +1,5 @@
-import Base from '../templates/Base';
-
 const Cart = () => {
-  return <Base>корзина</Base>;
+  return <div>корзина></div>;
 };
 
 export default Cart;
