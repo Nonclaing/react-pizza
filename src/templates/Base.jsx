@@ -4,9 +4,7 @@ function Base({ children }) {
   return (
     <div className='wrapper'>
       <Header />
-      <div className='content'>
-        <div className='container'>{children}</div>
-      </div>
+      <div className='content'>{children}</div>
     </div>
   );
 }

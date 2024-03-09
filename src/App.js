@@ -1,6 +1,6 @@
 import './scss/app.scss';
 
-import { Outlet } from 'react-router-dom';
+import { Outlet, redirect } from 'react-router-dom';
 import Base from './templates/Base';
 
 function App() {

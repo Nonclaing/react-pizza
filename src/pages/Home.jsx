@@ -3,7 +3,6 @@ import Sort from '../components/Sort/Sort';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import PizzaBlock from '../components/PizzaBlock';
 import { useEffect, useState } from 'react';
-import Base from '../templates/Base';
 
 const Home = () => {
   const [items, setItems] = useState([]);
@@ -19,7 +18,7 @@ const Home = () => {
   }, []);
 
   return (
-    <>
+    <div className='container'>
       <div className='content__top'>
         <Categories />
         <Sort />
@@ -41,7 +40,7 @@ const Home = () => {
               );
             })}
       </div>
-    </>
+    </div>
   );
 };
 
