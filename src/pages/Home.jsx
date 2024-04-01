@@ -3,12 +3,14 @@ import Sort from '../components/Sort/Sort';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import PizzaBlock from '../components/PizzaBlock';
 import { useEffect, useState } from 'react';
+import Pagination from '../components/Pagination/Pagination';
 
 const Home = ({ searchValue }) => {
   const [items, setItems] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
   const [sortValue, setSortValue] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, sortCurrentPage] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
@@ -17,6 +19,8 @@ const Home = ({ searchValue }) => {
       { name: 'sortBy', value: sortValue?.sortBy },
       { name: 'order', value: sortValue?.sortOrder },
       { name: 'search', value: searchValue },
+      { name: 'page', value: currentPage },
+      { name: 'limit', value: 4 },
     ];
 
     const urlParamsString = urlParams
@@ -31,7 +35,7 @@ const Home = ({ searchValue }) => {
         setItems(arr);
         setIsLoading(false);
       });
-  }, [categoryId, sortValue]);
+  }, [categoryId, sortValue, searchValue, currentPage]);
 
   return (
     <div className='container'>
@@ -61,6 +65,7 @@ const Home = ({ searchValue }) => {
               );
             })}
       </div>
+      <Pagination onChangePage={sortCurrentPage} />
     </div>
   );
 };
