@@ -4,7 +4,7 @@ import Skeleton from '../components/PizzaBlock/Skeleton';
 import PizzaBlock from '../components/PizzaBlock';
 import { useEffect, useState } from 'react';
 
-const Home = () => {
+const Home = ({ searchValue }) => {
   const [items, setItems] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
   const [sortValue, setSortValue] = useState({});
@@ -16,9 +16,8 @@ const Home = () => {
       { name: 'category', value: categoryId },
       { name: 'sortBy', value: sortValue?.sortBy },
       { name: 'order', value: sortValue?.sortOrder },
+      { name: 'search', value: searchValue },
     ];
-
-    console.log(urlParams);
 
     const urlParamsString = urlParams
       .map(({ name, value }) => {
@@ -41,7 +40,6 @@ const Home = () => {
         <Sort
           value={sortValue}
           changeCallback={(value) => {
-            console.log(value);
             setSortValue(value);
           }}
         />

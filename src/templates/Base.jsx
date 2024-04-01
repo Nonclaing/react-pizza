@@ -1,9 +1,9 @@
 import Header from '../components/Header/Header';
 
-function Base({ children }) {
+function Base({ children, searchValue, setSearchValue }) {
   return (
     <div className='wrapper'>
-      <Header />
+      <Header searchValue={searchValue} setSearchValue={setSearchValue} />
       <div className='content'>{children}</div>
     </div>
   );
