@@ -2,15 +2,17 @@ import Categories from '../components/Categories/Categories';
 import Sort from '../components/Sort/Sort';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import PizzaBlock from '../components/PizzaBlock';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Pagination from '../components/Pagination/Pagination';
+import { AppContext } from '../templates/Base';
 
-const Home = ({ searchValue }) => {
+const Home = () => {
   const [items, setItems] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
   const [sortValue, setSortValue] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, sortCurrentPage] = useState(true);
+  const [currentPage, sortCurrentPage] = useState(1);
+  const { searchValue, setSearchValue } = React.useContext(AppContext);
 
   useEffect(() => {
     setIsLoading(true);

@@ -1,11 +1,18 @@
 import Header from '../components/Header/Header';
+import React, { useState } from 'react';
 
-function Base({ children, searchValue, setSearchValue }) {
+export const AppContext = React.createContext({});
+
+function Base({ children }) {
+  const [searchValue, setSearchValue] = useState('');
+
   return (
-    <div className='wrapper'>
-      <Header searchValue={searchValue} setSearchValue={setSearchValue} />
-      <div className='content'>{children}</div>
-    </div>
+    <AppContext.Provider value={{ searchValue, setSearchValue }}>
+      <div className='wrapper'>
+        <Header />
+        <div className='content'>{children}</div>
+      </div>
+    </AppContext.Provider>
   );
 }
 

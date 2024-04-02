@@ -1,13 +1,10 @@
 import './scss/app.scss';
-import { Outlet, redirect } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Base from './templates/Base';
-import { useState } from 'react';
 
 function App() {
-  const [searchValue, setSearchValue] = useState('');
-
   return (
-    <Base searchValue={searchValue} setSearchValue={setSearchValue}>
+    <Base>
       <Outlet />
     </Base>
   );
