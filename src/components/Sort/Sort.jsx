@@ -1,46 +1,55 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSortValue } from '../../redux/slices/filterSlice';
 
-function Sort({ value, changeCallback }) {
+function Sort() {
   const list = [
     {
+      id: 0,
       text: 'популярности (воз.)',
       sortBy: 'rating',
       sortOrder: 'ask',
     },
     {
+      id: 1,
       text: 'популярности (убыв.)',
       sortBy: 'rating',
       sortOrder: 'desc',
     },
     {
+      id: 2,
       text: 'цене  (воз.)',
       sortBy: 'price',
       sortOrder: 'ask',
     },
     {
+      id: 3,
       text: 'цене (убыв.)',
       sortBy: 'price',
       sortOrder: 'desc',
     },
     {
+      id: 5,
       text: 'алфавиту  (воз.)',
       sortBy: 'title',
       sortOrder: 'ask',
     },
     {
+      id: 6,
       text: 'алфавиту (убыв.)',
       sortBy: 'title',
       sortOrder: 'desc',
     },
   ];
 
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(0);
+  const dispatch = useDispatch();
+  const sort = useSelector((state) => state.filter.sort);
 
-  const popupOnClick = (idx) => {
+  const [open, setOpen] = useState(false);
+
+  const popupOnClick = (sortItem) => {
     setOpen(false);
-    setSelected(idx);
-    changeCallback(list[idx]);
+    dispatch(setSortValue(sortItem));
   };
 
   return (
@@ -58,18 +67,18 @@ function Sort({ value, changeCallback }) {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{list[selected].text}</span>
+        <span onClick={() => setOpen(!open)}>{sort.text}</span>
       </div>
       {open && (
         <div className='sort__popup'>
           <ul>
-            {list.map(({ text }, idx) => {
+            {list.map((sortItem) => {
               return (
                 <li
-                  key={idx}
-                  onClick={() => popupOnClick(idx)}
-                  className={selected === idx ? 'active' : ''}>
-                  {text}
+                  key={sortItem.id}
+                  onClick={() => popupOnClick(sortItem)}
+                  className={sort.id === sortItem.id ? 'active' : ''}>
+                  {sortItem.text}
                 </li>
               );
             })}
