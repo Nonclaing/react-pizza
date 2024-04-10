@@ -5,18 +5,21 @@ import PizzaBlock from '../components/PizzaBlock';
 import React, { useEffect, useState } from 'react';
 import Pagination from '../components/Pagination/Pagination';
 import { AppContext } from '../templates/Base';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentPageCount } from '../redux/slices/filterSlice';
+import axios from 'axios';
 
 const Home = () => {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, sortCurrentPage] = useState(1);
   const { searchValue, setSearchValue } = React.useContext(AppContext);
 
-  const { categoryId, sort } = useSelector((state) => state.filter);
+  const dispatch = useDispatch();
+  const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
 
   useEffect(() => {
     setIsLoading(true);
+    console.log(currentPage);
     const urlParams = [
       { name: 'category', value: categoryId },
       { name: 'sortBy', value: sort?.sortBy },
@@ -32,13 +35,18 @@ const Home = () => {
       })
       .join('');
 
-    fetch(`https://65de266ddccfcd562f5665ae.mockapi.io/items?${urlParamsString}`)
-      .then((res) => res.json())
-      .then((arr) => {
-        setItems(arr);
+    axios
+      .get(`https://65de266ddccfcd562f5665ae.mockapi.io/items?${urlParamsString}`)
+      .then((res) => {
+        setItems(res.data);
         setIsLoading(false);
-      });
+      })
+      .catch((err) => console.log(err));
   }, [categoryId, sort, searchValue, currentPage]);
+
+  const onChangePage = (number) => {
+    dispatch(setCurrentPageCount(number));
+  };
 
   return (
     <div className='container'>
@@ -63,7 +71,7 @@ const Home = () => {
               );
             })}
       </div>
-      <Pagination onChangePage={sortCurrentPage} />
+      <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );
 };
