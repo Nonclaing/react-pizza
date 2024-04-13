@@ -3,45 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSortValue } from '../../redux/slices/filterSlice';
 
 function Sort() {
-  const list = [
-    {
-      id: 0,
-      text: 'популярности (воз.)',
-      sortBy: 'rating',
-      sortOrder: 'ask',
-    },
-    {
-      id: 1,
-      text: 'популярности (убыв.)',
-      sortBy: 'rating',
-      sortOrder: 'desc',
-    },
-    {
-      id: 2,
-      text: 'цене  (воз.)',
-      sortBy: 'price',
-      sortOrder: 'ask',
-    },
-    {
-      id: 3,
-      text: 'цене (убыв.)',
-      sortBy: 'price',
-      sortOrder: 'desc',
-    },
-    {
-      id: 5,
-      text: 'алфавиту  (воз.)',
-      sortBy: 'title',
-      sortOrder: 'ask',
-    },
-    {
-      id: 6,
-      text: 'алфавиту (убыв.)',
-      sortBy: 'title',
-      sortOrder: 'desc',
-    },
-  ];
-
   const dispatch = useDispatch();
   const sort = useSelector((state) => state.filter.sort);
 
@@ -90,3 +51,41 @@ function Sort() {
 }
 
 export default Sort;
+export const list = [
+  {
+    id: 0,
+    text: 'популярности (воз.)',
+    sortBy: 'rating',
+    sortOrder: 'ask',
+  },
+  {
+    id: 1,
+    text: 'популярности (убыв.)',
+    sortBy: 'rating',
+    sortOrder: 'desc',
+  },
+  {
+    id: 2,
+    text: 'цене  (воз.)',
+    sortBy: 'price',
+    sortOrder: 'ask',
+  },
+  {
+    id: 3,
+    text: 'цене (убыв.)',
+    sortBy: 'price',
+    sortOrder: 'desc',
+  },
+  {
+    id: 5,
+    text: 'алфавиту  (воз.)',
+    sortBy: 'title',
+    sortOrder: 'ask',
+  },
+  {
+    id: 6,
+    text: 'алфавиту (убыв.)',
+    sortBy: 'title',
+    sortOrder: 'desc',
+  },
+];
