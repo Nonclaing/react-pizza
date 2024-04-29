@@ -7,18 +7,17 @@ import Pagination from '../components/Pagination/Pagination';
 import { AppContext } from '../templates/Base';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentPageCount, setFilters } from '../redux/slices/filterSlice';
-import axios from 'axios';
+import { fetchPizzas } from '../redux/slices/pizzaSlice';
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
-  const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const { searchValue, setSearchValue } = React.useContext(AppContext);
   const hasFilter = useRef(false);
   const isMounted = useRef(false);
 
   const dispatch = useDispatch();
+  const { pizzaItems, loading, rejected } = useSelector((state) => state.pizza);
   const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
 
   const navigate = useNavigate();
@@ -29,7 +28,7 @@ const Home = () => {
 
   useEffect(() => {
     if (!hasFilter.current) {
-      fetchPizzas();
+      getPizzas();
     }
 
     hasFilter.current = false;
@@ -58,24 +57,12 @@ const Home = () => {
     hasFilter.current = true;
   }
 
-  function fetchPizzas() {
-    setIsLoading(true);
-    const urlParamsString = qs.stringify({
-      category: categoryId === 0 ? '' : categoryId,
-      sortBy: sort?.sortBy,
-      order: sort?.sortOrder,
-      search: searchValue,
-      page: currentPage,
-      limit: 4,
-    });
-
-    axios
-      .get(`https://65de266ddccfcd562f5665ae.mockapi.io/items?${urlParamsString}`)
-      .then((res) => {
-        setItems(res.data);
-        setIsLoading(false);
-      })
-      .catch((err) => console.log(err));
+  async function getPizzas() {
+    try {
+      await dispatch(fetchPizzas({ categoryId, sort, currentPage, searchValue }));
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function onChangePage(number) {
@@ -89,23 +76,29 @@ const Home = () => {
         <Sort />
       </div>
       <h2 className='content__title'>Все пиццы</h2>
-      <div className='content__items'>
-        {isLoading
-          ? [...new Array(8)].map((_, index) => <Skeleton key={index} />)
-          : items.map(({ id, title, price, imageUrl, sizes, types }) => {
-              return (
-                <PizzaBlock
-                  key={id}
-                  id={id}
-                  title={title}
-                  price={price}
-                  imageUrl={imageUrl}
-                  sizes={sizes}
-                  types={types}
-                />
-              );
-            })}
-      </div>
+      {rejected ? (
+        <div>
+          <h2>Произошла ошибка</h2>
+        </div>
+      ) : (
+        <div className='content__items'>
+          {loading
+            ? [...new Array(8)].map((_, index) => <Skeleton key={index} />)
+            : pizzaItems.map(({ id, title, price, imageUrl, sizes, types }) => {
+                return (
+                  <PizzaBlock
+                    key={id}
+                    id={id}
+                    title={title}
+                    price={price}
+                    imageUrl={imageUrl}
+                    sizes={sizes}
+                    types={types}
+                  />
+                );
+              })}
+        </div>
+      )}
       <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );

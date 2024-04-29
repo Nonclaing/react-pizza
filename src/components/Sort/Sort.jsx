@@ -17,7 +17,6 @@ function Sort() {
   const outSideClick = (event) => {
     if (!event.composedPath().includes(sortRef.current)) {
       setOpen(false);
-      console.log('1');
     }
   };
 
