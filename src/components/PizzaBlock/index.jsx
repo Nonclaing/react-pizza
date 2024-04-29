@@ -1,13 +1,18 @@
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addItem } from '../../redux/slices/cartSlice';
 
-function Index({ title, price, imageUrl, sizes, types }) {
+function Index({ id, title, price, imageUrl, sizes, types }) {
   const typeNames = ['тонкое', 'традиционное'];
 
-  const [pizzaCount, setPizzaCount] = useState(0);
   const [activeType, setActiveType] = useState(0);
   const [activeSize, setActiveSize] = useState(0);
+  const { items } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
 
-  const increaseCount = () => setPizzaCount(pizzaCount + 1);
+  const increaseCount = () => {
+    dispatch(addItem({ item: { id, title, price, imageUrl, sizes, types } }));
+  };
 
   return (
     <div className='pizza-block'>
@@ -54,7 +59,7 @@ function Index({ title, price, imageUrl, sizes, types }) {
             />
           </svg>
           <span>Добавить</span>
-          <i>{pizzaCount}</i>
+          {items[id]?.count && <i>{items[id].count}</i>}
         </button>
       </div>
     </div>
