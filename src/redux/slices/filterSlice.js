@@ -4,6 +4,7 @@ import { list as sortList } from './../../components/Sort/Sort';
 export const filterSlice = createSlice({
   name: 'filter',
   initialState: {
+    searchValue: '',
     categoryId: 0,
     currentPage: 1,
     sort: {
@@ -42,6 +43,7 @@ export const selectFilter = (state) => state.filter;
 export const selectFilterSort = (state) => state.filter.sort;
 export const selectCategoryId = (state) => state.filter.categoryId;
 
-export const { setCategoryId, setSortValue, setCurrentPageCount, setFilters } = filterSlice.actions;
+export const { setCategoryId, setSortValue, setCurrentPageCount, setFilters, setSearchValue } =
+  filterSlice.actions;
 
 export default filterSlice.reducer;
