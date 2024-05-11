@@ -6,7 +6,7 @@ export const fetchPizzas = createAsyncThunk(
   'pizza/fetchByUdStatus',
   async ({ categoryId, sort, searchValue, currentPage, limit = 4 }, thunkAPI) => {
     const urlParamsString = qs.stringify({
-      category: categoryId === 0 ? '' : categoryId,
+      category: categoryId === 0 ? undefined : categoryId,
       sortBy: sort?.sortBy,
       order: sort?.sortOrder,
       search: searchValue,
