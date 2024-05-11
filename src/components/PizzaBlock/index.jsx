@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addItem } from '../../redux/slices/cartSlice';
+import { addItem, selectCart } from '../../redux/slices/cartSlice';
 
 function Index({ id, title, price, imageUrl, sizes, types }) {
   const typeNames = ['тонкое', 'традиционное'];
 
   const [activeType, setActiveType] = useState(0);
   const [activeSize, setActiveSize] = useState(0);
-  const { items } = useSelector((state) => state.cart);
+  const { items } = useSelector(selectCart);
   const dispatch = useDispatch();
 
   const increaseCount = () => {

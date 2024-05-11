@@ -2,12 +2,12 @@ import Categories from '../components/Categories/Categories';
 import Sort from '../components/Sort/Sort';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import PizzaBlock from '../components/PizzaBlock';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Pagination from '../components/Pagination/Pagination';
 import { AppContext } from '../templates/Base';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentPageCount, setFilters } from '../redux/slices/filterSlice';
-import { fetchPizzas } from '../redux/slices/pizzaSlice';
+import { selectFilter, setCurrentPageCount, setFilters } from '../redux/slices/filterSlice';
+import { fetchPizzas, selectPizza } from '../redux/slices/pizzaSlice';
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,8 +17,8 @@ const Home = () => {
   const isMounted = useRef(false);
 
   const dispatch = useDispatch();
-  const { pizzaItems, loading, rejected } = useSelector((state) => state.pizza);
-  const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
+  const { pizzaItems, loading, rejected } = useSelector(selectPizza);
+  const { categoryId, sort, currentPage } = useSelector(selectFilter);
 
   const navigate = useNavigate();
 
