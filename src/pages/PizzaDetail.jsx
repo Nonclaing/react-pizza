@@ -1,16 +1,22 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPizza, selectPizza, selectPizzaDetail } from '../redux/slices/pizzaSlice';
 
 function PizzaDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { pizzaDetail, loading, rejected } = useSelector(selectPizza);
 
   useEffect(() => {
     get();
   }, []);
+
+  useEffect(() => {
+    alert('Пицца не найдена');
+    navigate('/');
+  }, [rejected]);
 
   async function get() {
     try {

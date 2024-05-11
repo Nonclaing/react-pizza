@@ -1,11 +1,14 @@
 import Header from '../components/Header/Header';
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 
-function Base({ children }) {
+function Base() {
   return (
     <div className='wrapper'>
       <Header />
-      <div className='content'>{children}</div>
+      <div className='content'>
+        <Outlet />
+      </div>
     </div>
   );
 }
