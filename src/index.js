@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Cart from './pages/Cart';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import PizzaDetail from './pages/PizzaDetail';
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: '/cart',
         element: <Cart />,
+      },
+      {
+        path: '/pizza/:id',
+        element: <PizzaDetail />,
       },
     ],
   },
