@@ -16,6 +16,7 @@ function CartItem({ id, title, price, imageUrl, sizes, type, count }) {
       <div className='cart__item-count'>
         <div
           className='button button--outline button--circle cart__item-count-minus'
+          data-testid='remove'
           onClick={() => dispatch(removeItem({ item: { id } }))}>
           <svg
             width='10'
@@ -34,6 +35,7 @@ function CartItem({ id, title, price, imageUrl, sizes, type, count }) {
         <b>{count}</b>
         <div
           className='button button--outline button--circle cart__item-count-plus'
+          data-testid='add'
           onClick={() =>
             dispatch(addItem({ item: { id, title, price, imageUrl, sizes, type, count } }))
           }>
@@ -55,7 +57,10 @@ function CartItem({ id, title, price, imageUrl, sizes, type, count }) {
       <div className='cart__item-price'>
         <b>{price * count} ₽</b>
       </div>
-      <div className='cart__item-remove' onClick={() => dispatch(clearItem({ item: { id } }))}>
+      <div
+        className='cart__item-remove'
+        data-testid='clear'
+        onClick={() => dispatch(clearItem({ item: { id } }))}>
         <div className='button button--outline button--circle'>
           <svg
             width='10'

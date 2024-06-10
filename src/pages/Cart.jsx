@@ -90,8 +90,6 @@ const Cart = () => {
                 title={title}
                 price={price}
                 imageUrl={imageUrl}
-                // sizes={sizes}
-                // type={type}
                 count={count}
               />
             );
