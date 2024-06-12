@@ -6,7 +6,7 @@ import NotFound from './pages/NotFound';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
 import { Provider } from 'react-redux';
-import store from './redux/store';
+import { setupStore } from './redux/store';
 import PizzaDetail from './pages/PizzaDetail';
 
 const router = createBrowserRouter([
@@ -31,6 +31,7 @@ const router = createBrowserRouter([
   },
 ]);
 
+const store = setupStore();
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

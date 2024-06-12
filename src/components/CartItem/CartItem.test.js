@@ -1,90 +1,205 @@
 import CartItem from './CartItem';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { useDispatch, useSelector } from 'react-redux';
-import * as reduxHooks from 'react-redux';
-import * as action from '../../redux/slices/cartSlice';
-import { addItem, removeItem } from '../../redux/slices/cartSlice';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event';
+import { renderWithProviders } from '../../utils/test-utils';
+import { setupStore } from '../../redux/store';
 
-jest.mock('react-redux');
+const renderComponent = ({ id, title, price, imageUrl, sizes, type, count }) => {
+  return render(
+    <CartItem
+      id={id}
+      title={title}
+      price={price}
+      imageUrl={imageUrl}
+      count={count}
+      sizes={sizes}
+      type={type}
+    />,
+  );
+};
 
-const mockDispatch = jest.spyOn(reduxHooks, 'useDispatch');
+const getComponent = ({ id, title, price, imageUrl, sizes, type, count }) => {
+  return (
+    <CartItem
+      id={id}
+      title={title}
+      price={price}
+      imageUrl={imageUrl}
+      count={count}
+      sizes={sizes}
+      type={type}
+    />
+  );
+};
+
+const defaultValue = ({
+  count = 1,
+  id = '0',
+  type = 0,
+  sizes = 26,
+  title = 'Пепперони Фреш с перцем',
+  price = 800,
+  imageUrl = 'https://media.dodostatic.net/image/r:584x584/11EE7D6130241E75B0AB33725248C0D0.avif',
+} = {}) => ({
+  count,
+  items: [{ id, type, sizes, title, price, imageUrl, count }],
+});
 
 describe('Тест компонента CartItem', () => {
-  it('Рендер', () => {
-    useSelector.mockReturnValue({
-      count: 1,
-      items: [
-        {
-          id: '0',
-          type: 0,
-          sizes: 26,
-          title: 'Пепперони Фреш с перцем',
-          price: 803,
-          imageUrl:
-            'https://media.dodostatic.net/image/r:584x584/11EE7D6130241E75B0AB33725248C0D0.avif',
-        },
-      ],
-    });
-    mockDispatch.mockReturnValue(jest.fn());
-
-    const { items, count } = useSelector(action.selectCart);
+  describe('Проверка на наличие данных в компоненте', () => {
+    const { items, count } = defaultValue();
     const { id, title, price, imageUrl, sizes, type } = items[0];
 
-    const component = render(
-      <CartItem
-        id={id}
-        title={title}
-        price={price}
-        imageUrl={imageUrl}
-        count={count}
-        sizes={sizes}
-        type={type}
-      />,
-    );
+    beforeEach(() => {
+      renderWithProviders(getComponent({ id, title, price, imageUrl, sizes, type, count }));
+    });
 
-    expect(component).toMatchSnapshot();
+    test('Поиск заголовка', () => {
+      expect(screen.queryByText(title)).toBeInTheDocument();
+    });
+
+    test('Поиск картинки', () => {
+      const imgElement = screen.queryByTestId('img');
+      expect(imgElement).toBeInTheDocument();
+      expect(imgElement).toHaveAttribute('src', imageUrl);
+    });
+
+    test('Поиск количества', () => {
+      const countElement = screen.queryByTestId('count');
+      expect(countElement).toBeInTheDocument();
+      expect(countElement).toHaveTextContent(count);
+    });
+
+    test('Поиск цены', () => {
+      const priceElement = screen.queryByTestId('price');
+      expect(priceElement).toBeInTheDocument();
+      expect(priceElement).toHaveTextContent(count * price);
+    });
+
+    test('Поиск каунетра', () => {
+      const removeElement = screen.queryByTestId('remove');
+      expect(removeElement).toBeInTheDocument();
+
+      const addElement = screen.queryByTestId('add');
+      expect(addElement).toBeInTheDocument();
+    });
+
+    test('Поиск удаление товара', () => {
+      const clearElement = screen.queryByTestId('clear');
+      expect(clearElement).toBeInTheDocument();
+    });
   });
 
-  it('Диспат action', () => {
-    const dispatch = jest.fn();
-    mockDispatch.mockReturnValue(dispatch);
+  describe('Проверка логики', () => {
+    it('Добавление товара', async () => {
+      const defaultVal = defaultValue();
+      const { id, count, price } = defaultVal.items[0];
+      const store = setupStore({
+        cart: {
+          totalPrice: price * count,
+          items: {
+            [id]: { ...defaultVal.items[0], count },
+          },
+          count,
+        },
+      });
+      const { rerender } = renderWithProviders(
+        getComponent({ ...store.getState().cart.items[id] }),
+        {
+          store,
+        },
+      );
 
-    const mockedClearItemComplete = jest.spyOn(action, 'clearItem');
-    const mockedAddItemComplete = jest.spyOn(action, 'addItem');
-    const mockedRemoveItemComplete = jest.spyOn(action, 'removeItem');
+      userEvent.click(screen.getByTestId('add'));
+      rerender(getComponent({ ...store.getState().cart.items[id] }));
 
-    const { items, count } = useSelector(action.selectCart);
-    const { id, title, price, imageUrl, sizes, type } = items[0];
+      const countElement = await screen.findByTestId('count');
+      expect(countElement).toBeInTheDocument();
+      expect(countElement).toHaveTextContent(count + 1);
 
-    render(
-      <CartItem
-        id={id}
-        title={title}
-        price={price}
-        imageUrl={imageUrl}
-        count={count}
-        sizes={sizes}
-        type={type}
-      />,
-    );
-
-    fireEvent.click(screen.getByTestId('clear'));
-
-    expect(dispatch).toHaveBeenCalledTimes(1);
-
-    expect(mockedClearItemComplete).toHaveBeenCalledTimes(1);
-    expect(mockedClearItemComplete).toHaveBeenCalledWith({ item: { id } });
-
-    fireEvent.click(screen.getByTestId('add'));
-
-    expect(mockedAddItemComplete).toHaveBeenCalledTimes(1);
-    expect(mockedAddItemComplete).toHaveBeenCalledWith({
-      item: { id, title, price, imageUrl, sizes, type, count },
+      const priceElement = await screen.findByTestId('price');
+      expect(priceElement).toBeInTheDocument();
+      expect(priceElement).toHaveTextContent((count + 1) * price);
     });
 
-    fireEvent.click(screen.getByTestId('remove'));
+    it('Уменьшение товара', async () => {
+      const defaultVal = defaultValue({ count: 2 });
+      const { id, count, price } = defaultVal.items[0];
+      const store = setupStore({
+        cart: {
+          totalPrice: price * count,
+          items: {
+            [id]: { ...defaultVal.items[0], count },
+          },
+          count,
+        },
+      });
+      const { rerender } = renderWithProviders(
+        getComponent({ ...store.getState().cart.items[id] }),
+        {
+          store,
+        },
+      );
 
-    expect(mockedRemoveItemComplete).toHaveBeenCalledTimes(1);
-    expect(mockedRemoveItemComplete).toHaveBeenCalledWith({ item: { id } });
+      userEvent.click(screen.getByTestId('remove'));
+      rerender(getComponent({ ...store.getState().cart.items[id] }));
+
+      const countElement = await screen.findByTestId('count');
+      expect(countElement).toBeInTheDocument();
+      expect(countElement).toHaveTextContent(count - 1);
+
+      const priceElement = await screen.findByTestId('price');
+      expect(priceElement).toBeInTheDocument();
+      expect(priceElement).toHaveTextContent((count - 1) * price);
+    });
+
+    it('Удаление товара', async () => {
+      const defaultVal = defaultValue();
+      const { id, count, price } = defaultVal.items[0];
+      const store = setupStore({
+        cart: {
+          totalPrice: price * count,
+          items: {
+            [id]: { ...defaultVal.items[0], count },
+          },
+          count,
+        },
+      });
+      const { rerender } = renderWithProviders(
+        getComponent({ ...store.getState().cart.items[id] }),
+        {
+          store,
+        },
+      );
+
+      userEvent.click(screen.getByTestId('clear'));
+      rerender(getComponent({ ...store.getState().cart.items[id] }));
+      expect(screen.queryByTestId('cart-item')).not.toBeInTheDocument();
+    });
+
+    it('Удаление товара через каунтер', async () => {
+      const defaultVal = defaultValue();
+      const { id, count, price } = defaultVal.items[0];
+      const store = setupStore({
+        cart: {
+          totalPrice: price * count,
+          items: {
+            [id]: { ...defaultVal.items[0], count },
+          },
+          count,
+        },
+      });
+      const { rerender } = renderWithProviders(
+        getComponent({ ...store.getState().cart.items[id] }),
+        {
+          store,
+        },
+      );
+
+      userEvent.click(screen.getByTestId('remove'));
+      rerender(getComponent({ ...store.getState().cart.items[id] }));
+      expect(screen.queryByTestId('cart-item')).not.toBeInTheDocument();
+    });
   });
 });

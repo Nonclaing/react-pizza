@@ -4,14 +4,21 @@ import { addItem, clearItem, removeItem } from '../../redux/slices/cartSlice';
 function CartItem({ id, title, price, imageUrl, sizes, type, count }) {
   const dispatch = useDispatch();
 
+  if (!id) return;
+
   return (
-    <div className='cart__item'>
+    <div className='cart__item' data-testid='cart-item'>
       <div className='cart__item-img'>
-        <img className='pizza-block__image' src={imageUrl} loading={'lazy'} alt='Pizza' />
+        <img
+          className='pizza-block__image'
+          src={imageUrl}
+          loading={'lazy'}
+          alt='Pizza'
+          data-testid='img'
+        />
       </div>
       <div className='cart__item-info'>
         <h3>{title}</h3>
-        <p>тонкое тесто, 26 см.</p>
       </div>
       <div className='cart__item-count'>
         <div
@@ -32,7 +39,7 @@ function CartItem({ id, title, price, imageUrl, sizes, type, count }) {
               fill='#EB5A1E'></path>
           </svg>
         </div>
-        <b>{count}</b>
+        <b data-testid='count'>{count}</b>
         <div
           className='button button--outline button--circle cart__item-count-plus'
           data-testid='add'
@@ -55,7 +62,7 @@ function CartItem({ id, title, price, imageUrl, sizes, type, count }) {
         </div>
       </div>
       <div className='cart__item-price'>
-        <b>{price * count} ₽</b>
+        <b data-testid='price'>{price * count} ₽</b>
       </div>
       <div
         className='cart__item-remove'
