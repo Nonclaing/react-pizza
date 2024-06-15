@@ -32,6 +32,7 @@ const router = createBrowserRouter([
 ]);
 
 const store = setupStore();
+if (window.Cypress) window.store = store;
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

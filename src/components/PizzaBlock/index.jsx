@@ -16,7 +16,7 @@ function Index({ id, title, price, imageUrl, sizes, types }) {
   };
 
   return (
-    <div className='pizza-block'>
+    <div className='pizza-block' data-id={id}>
       <Link to={`/pizza/${id}`}>
         <img className='pizza-block__image' src={imageUrl} alt='Pizza' loading={'lazy'} />
       </Link>
@@ -49,7 +49,10 @@ function Index({ id, title, price, imageUrl, sizes, types }) {
       </div>
       <div className='pizza-block__bottom'>
         <div className='pizza-block__price'>от {price} ₽</div>
-        <button className='button button--outline button--add' onClick={increaseCount}>
+        <button
+          className='button button--outline button--add'
+          data-testid='add'
+          onClick={increaseCount}>
           <svg
             width='12'
             height='12'
